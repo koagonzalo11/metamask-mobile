@@ -15,6 +15,14 @@ export const useConfirmationRedesignEnabled = () => {
   const approvalRequestType = approvalRequest?.type;
   const fromAddress = approvalRequest?.requestData?.from;
 
+  // eslint-disable-next-line
+  console.log(
+    '======================',
+    fromAddress,
+    isExternalHardwareAccount(fromAddress),
+    isSyncingQRHardware,
+    isSigningQRObject,
+  );
   const isRedesignedEnabled = useMemo(
     () =>
       (confirmation_redesign as Record<string, string>)?.signatures &&

@@ -18,6 +18,12 @@ const Footer = () => {
 
   const { styles } = useStyles(styleSheet, {});
 
+  // eslint-disable-next-line
+  console.log(
+    '====================================',
+    securityAlertResponse,
+    securityAlertResponse !== undefined,
+  );
   return (
     <View style={styles.buttonsContainer}>
       <Button
