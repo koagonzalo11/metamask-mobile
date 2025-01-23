@@ -10,6 +10,7 @@ import Button, {
 import { useStyles } from '../../../../../../component-library/hooks';
 import { useConfirmActions } from '../../../hooks/useConfirmActions';
 import { useSecurityAlertResponse } from '../../../hooks/useSecurityAlertResponse';
+import { ResultType } from '../../BlockaidBanner/BlockaidBanner.types';
 import styleSheet from './Footer.styles';
 
 const Footer = () => {
@@ -18,12 +19,6 @@ const Footer = () => {
 
   const { styles } = useStyles(styleSheet, {});
 
-  // eslint-disable-next-line
-  console.log(
-    '====================================',
-    securityAlertResponse,
-    securityAlertResponse !== undefined,
-  );
   return (
     <View style={styles.buttonsContainer}>
       <Button
@@ -42,7 +37,7 @@ const Footer = () => {
         size={ButtonSize.Lg}
         variant={ButtonVariants.Primary}
         width={ButtonWidthTypes.Full}
-        isDanger={securityAlertResponse !== undefined}
+        isDanger={securityAlertResponse?.result_type === ResultType.Malicious}
       />
     </View>
   );

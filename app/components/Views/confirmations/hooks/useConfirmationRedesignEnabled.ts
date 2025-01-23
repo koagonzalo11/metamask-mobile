@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { ApprovalTypes } from '../../../../core/RPCMethods/RPCMethodMiddleware';
-import { isExternalHardwareAccount } from '../../../../util/address';
+import { isHardwareAccount } from '../../../../util/address';
 import { selectRemoteFeatureFlags } from '../../../../selectors/featureFlagController';
 import useApprovalRequest from './useApprovalRequest';
 import useQRHardwareAwareness from './useQRHardwareAwareness';
@@ -15,14 +15,6 @@ export const useConfirmationRedesignEnabled = () => {
   const approvalRequestType = approvalRequest?.type;
   const fromAddress = approvalRequest?.requestData?.from;
 
-  // eslint-disable-next-line
-  console.log(
-    '======================',
-    fromAddress,
-    isExternalHardwareAccount(fromAddress),
-    isSyncingQRHardware,
-    isSigningQRObject,
-  );
   const isRedesignedEnabled = useMemo(
     () =>
       (confirmation_redesign as Record<string, string>)?.signatures &&
@@ -30,7 +22,7 @@ export const useConfirmationRedesignEnabled = () => {
       !isSyncingQRHardware &&
       !isSigningQRObject &&
       // following condition will ensure that user is redirected to old designs for hardware wallets
-      !isExternalHardwareAccount(fromAddress) &&
+      !isHardwareAccount(fromAddress) &&
       approvalRequestType &&
       [ApprovalTypes.PERSONAL_SIGN, ApprovalTypes.ETH_SIGN_TYPED_DATA].includes(
         approvalRequestType as ApprovalTypes,
