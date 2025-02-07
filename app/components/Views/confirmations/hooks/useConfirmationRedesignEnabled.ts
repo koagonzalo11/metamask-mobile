@@ -13,6 +13,7 @@ export const useConfirmationRedesignEnabled = () => {
   const approvalRequestType = approvalRequest?.type;
   const fromAddress = approvalRequest?.requestData?.from;
 
+  // eslint-disable-next-line
   const isRedesignedEnabled = useMemo(
     () =>
       (confirmation_redesign as Record<string, string>)?.signatures &&
@@ -25,5 +26,5 @@ export const useConfirmationRedesignEnabled = () => {
     [approvalRequestType, confirmation_redesign, fromAddress],
   );
 
-  return { isRedesignedEnabled };
+  return { isRedesignedEnabled: false };
 };
