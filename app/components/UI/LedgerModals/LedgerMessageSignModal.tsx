@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import Modal from 'react-native-modal';
+
 import LedgerConfirmationModal from './LedgerConfirmationModal';
-import ReusableModal, { ReusableModalRef } from '../ReusableModal';
 import { createStyles } from './styles';
 import {
   createNavigationDetails,
@@ -28,9 +29,6 @@ export interface LedgerMessageSignModalParams {
   ) => Promise<void>;
   // TODO: Replace "any" with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  version: any;
-  // TODO: Replace "any" with type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type: any;
   // TODO: Replace "any" with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +42,7 @@ export const createLedgerMessageSignModalNavDetails =
 
 const LedgerMessageSignModal = () => {
   const dispatch = useDispatch();
-  const modalRef = useRef<ReusableModalRef | null>(null);
+  const [isVisible, setVisibility] = useState(true);
   const { colors } = useAppThemeFromContext() || mockTheme;
   const styles = createStyles(colors);
   const { signingEvent }: iEventGroup = useSelector(
@@ -55,7 +53,7 @@ const LedgerMessageSignModal = () => {
     useParams<LedgerMessageSignModalParams>();
 
   const dismissModal = useCallback(() => {
-    modalRef?.current?.dismissModal();
+    setVisibility(false);
     dispatch(resetEventStage(signingEvent.rpcName));
   }, [dispatch, signingEvent.rpcName]);
 
@@ -86,7 +84,7 @@ const LedgerMessageSignModal = () => {
   }, [dismissModal, onConfirmationComplete]);
 
   return (
-    <ReusableModal ref={modalRef} style={styles.modal}>
+    <Modal isVisible={isVisible} style={styles.modal}>
       <View style={styles.contentWrapper}>
         <LedgerConfirmationModal
           onConfirmation={executeOnLedger}
@@ -94,7 +92,7 @@ const LedgerMessageSignModal = () => {
           deviceId={deviceId}
         />
       </View>
-    </ReusableModal>
+    </Modal>
   );
 };
 

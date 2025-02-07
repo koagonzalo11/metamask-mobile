@@ -5,6 +5,7 @@ import { MetaMetricsEvents } from '../../../hooks/useMetrics';
 import { isSignatureRequest } from '../utils/confirm';
 import { useQRHardwareContext } from '../context/QRHardwareContext/QRHardwareContext';
 import useApprovalRequest from './useApprovalRequest';
+import { useLedgerWallet } from './useLedgerWallet';
 import { useSignatureMetrics } from './useSignatureMetrics';
 
 export const useConfirmActions = () => {
@@ -19,36 +20,17 @@ export const useConfirmActions = () => {
     isQRSigningInProgress,
     setScannerVisible,
   } = useQRHardwareContext();
+  const { isLedgerAccount, openLedgerSignModal } = useLedgerWallet();
 
-  const signatureRequest =
+  const isSignatureReq =
     approvalRequest?.type && isSignatureRequest(approvalRequest?.type);
 
-  const onConfirm = useCallback(async () => {
-    if (isQRSigningInProgress) {
-      setScannerVisible(true);
-      return;
-    }
-    await onRequestConfirm({
-      waitForResult: true,
-      deleteAfterResult: true,
-      handleErrors: false,
-    });
-    if (signatureRequest) {
-      captureSignatureMetrics(MetaMetricsEvents.SIGNATURE_APPROVED);
-      PPOMUtil.clearSignatureSecurityAlertResponse();
-    }
-  }, [
-    captureSignatureMetrics,
-    isQRSigningInProgress,
-    onRequestConfirm,
-    setScannerVisible,
-    signatureRequest,
-  ]);
-
   const onReject = useCallback(async () => {
+    // eslint-disable-next-line
+    console.log('=================== INTO REJECT ===============');
     await cancelQRScanRequestIfPresent();
     onRequestReject();
-    if (signatureRequest) {
+    if (isSignatureReq) {
       captureSignatureMetrics(MetaMetricsEvents.SIGNATURE_REJECTED);
       PPOMUtil.clearSignatureSecurityAlertResponse();
     }
@@ -56,7 +38,42 @@ export const useConfirmActions = () => {
     cancelQRScanRequestIfPresent,
     captureSignatureMetrics,
     onRequestReject,
-    signatureRequest,
+    isSignatureReq,
+  ]);
+
+  const onApprovalConfirm = useCallback(async () => {
+    // eslint-disable-next-line
+    console.log('=================== INTO CONFIRM ===============');
+    await onRequestConfirm({
+      waitForResult: true,
+      deleteAfterResult: true,
+      handleErrors: false,
+    });
+    if (isSignatureReq) {
+      captureSignatureMetrics(MetaMetricsEvents.SIGNATURE_APPROVED);
+      PPOMUtil.clearSignatureSecurityAlertResponse();
+    }
+  }, [captureSignatureMetrics, onRequestConfirm, isSignatureReq]);
+
+  const onConfirm = useCallback(async () => {
+    if (isLedgerAccount) {
+      // eslint-disable-next-line
+      console.log('=================== LEDGER CONFIRM ===============');
+      await openLedgerSignModal(onApprovalConfirm, onReject);
+      return;
+    }
+    if (isQRSigningInProgress) {
+      setScannerVisible(true);
+      return;
+    }
+    await onApprovalConfirm();
+  }, [
+    isLedgerAccount,
+    isQRSigningInProgress,
+    onApprovalConfirm,
+    openLedgerSignModal,
+    setScannerVisible,
+    onReject,
   ]);
 
   return { onConfirm, onReject };

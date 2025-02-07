@@ -5,7 +5,6 @@ import { Colors } from '../../../util/theme/models';
 export const createStyles = (colors: Colors) =>
   StyleSheet.create({
     modal: {
-      justifyContent: 'flex-end',
       height: 600,
       margin: 0,
       zIndex: 1000,
