@@ -1223,7 +1223,8 @@ workflows:
     envs:
       - SENTRY_DISABLE_AUTO_UPLOAD: 'false'
     after_run:
-      - build_android_release
+      - build_ios_qa
+      - build_android_qa
   build_android_devbuild:
     before_run:
       - code_setup
@@ -1850,5 +1851,5 @@ trigger_map:
     pipeline: pr_smoke_e2e_pipeline
   - tag: 'v*.*.*-RC-*'
     pipeline: release_e2e_pipeline
-  - push_branch: detox/address-regression-tests-slowdown
-    pipeline: multichain_permissions_e2e_pipeline
+  - push_branch: test-qa-build-creation
+    workflow: build_android_release_and_upload_sourcemaps
