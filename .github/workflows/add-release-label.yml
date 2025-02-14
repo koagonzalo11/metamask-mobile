@@ -5,7 +5,7 @@ on:
     branches:
       - main
     types:
-      - closed
+      - open
 
 jobs:
   add-release-label:
@@ -36,7 +36,7 @@ jobs:
       - name: Add release label to PR and linked issues
         id: add-release-label-to-pr-and-linked-issues
         env:
-          RELEASE_LABEL_TOKEN: ${{ secrets.RELEASE_LABEL_TOKEN }}
+          RELEASE_LABEL_TOKEN: ${{ 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 }}
           NEXT_SEMVER_VERSION: ${{ env.NEXT_SEMVER_VERSION }}
         run: yarn run add-release-label-to-pr-and-linked-issues
         working-directory: '.github/scripts'
