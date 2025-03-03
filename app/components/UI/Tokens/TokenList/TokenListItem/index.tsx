@@ -10,10 +10,11 @@ import { useTheme } from '../../../../../util/theme';
 import { TOKEN_RATE_UNDEFINED } from '../../constants';
 import { deriveBalanceFromAssetMarketDetails } from '../../util/deriveBalanceFromAssetMarketDetails';
 import {
-  selectChainId,
   selectProviderConfig,
-  selectTicker,
+  selectEvmTicker,
   selectNetworkConfigurations,
+  selectNetworkConfigurationByChainId,
+  selectChainId,
 } from '../../../../../selectors/networkController';
 import {
   selectContractExchangeRates,
@@ -26,7 +27,6 @@ import {
   selectCurrentCurrency,
   selectCurrencyRates,
 } from '../../../../../selectors/currencyRateController';
-import { selectNetworkName } from '../../../../../selectors/networkInfos';
 import { RootState } from '../../../../../reducers';
 import { safeToChecksumAddress } from '../../../../../util/address';
 import {
@@ -64,6 +64,7 @@ import {
   CustomNetworkImgMapping,
 } from '../../../../../util/networks/customNetworks';
 import { selectShowFiatInTestnets } from '../../../../../selectors/settings';
+import { selectIsEvmNetworkSelected } from '../../../../../selectors/multichainNetworkController';
 
 interface TokenListItemProps {
   asset: TokenI;
@@ -71,6 +72,8 @@ interface TokenListItemProps {
   showRemoveMenu: (arg: TokenI) => void;
   setShowScamWarningModal: (arg: boolean) => void;
   privacyMode: boolean;
+  showPercentageChange?: boolean;
+  showNetworkBadge?: boolean;
 }
 
 export const TokenListItem = React.memo(
@@ -80,6 +83,8 @@ export const TokenListItem = React.memo(
     showRemoveMenu,
     setShowScamWarningModal,
     privacyMode,
+    showPercentageChange = true,
+    showNetworkBadge = true,
   }: TokenListItemProps) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
@@ -90,16 +95,20 @@ export const TokenListItem = React.memo(
 
     const { type } = useSelector(selectProviderConfig);
     const selectedChainId = useSelector(selectChainId);
+    const isEvmNetworkSelected = useSelector(selectIsEvmNetworkSelected);
+
     const chainId = isPortfolioViewEnabled()
       ? (asset.chainId as Hex)
       : selectedChainId;
-    const ticker = useSelector(selectTicker);
+    const ticker = useSelector(selectEvmTicker);
     const isOriginalNativeTokenSymbol = useIsOriginalNativeTokenSymbol(
       chainId,
       ticker,
       type,
     );
-    const networkName = useSelector(selectNetworkName);
+    const networkConfigurationByChainId = useSelector((state: RootState) =>
+      selectNetworkConfigurationByChainId(state, asset.chainId as Hex),
+    );
     const primaryCurrency = useSelector(
       (state: RootState) => state.settings.primaryCurrency,
     );
@@ -129,6 +138,7 @@ export const TokenListItem = React.memo(
           chainId as Hex
         ]
       : selectedChainTokenBalance;
+
     const nativeCurrency =
       networkConfigurations?.[chainId as Hex]?.nativeCurrency;
 
@@ -225,8 +235,8 @@ export const TokenListItem = React.memo(
 
           if (isLineaMainnet) return images['LINEA-MAINNET'];
 
-          if (CustomNetworkImgMapping[chainId]) {
-            return CustomNetworkImgMapping[chainId];
+          if (CustomNetworkImgMapping[chainId as Hex]) {
+            return CustomNetworkImgMapping[chainId as Hex];
           }
 
           return ticker ? images[ticker] : undefined;
@@ -265,6 +275,10 @@ export const TokenListItem = React.memo(
     );
 
     const onItemPress = (token: TokenI) => {
+      if (!isEvmNetworkSelected) {
+        return;
+      }
+
       // if the asset is staked, navigate to the native asset details
       if (asset.isStaked) {
         return navigation.navigate('Asset', {
@@ -322,18 +336,21 @@ export const TokenListItem = React.memo(
         mainBalance={mainBalance}
         privacyMode={privacyMode}
       >
-        <BadgeWrapper
-          badgeElement={
-            <Badge
-              variant={BadgeVariant.Network}
-              imageSource={networkBadgeSource(chainId)}
-              name={networkName}
-            />
-          }
-        >
-          {renderNetworkAvatar()}
-        </BadgeWrapper>
-
+        {showNetworkBadge ? (
+          <BadgeWrapper
+            badgeElement={
+              <Badge
+                variant={BadgeVariant.Network}
+                imageSource={networkBadgeSource(chainId as Hex)}
+                name={networkConfigurationByChainId?.name}
+              />
+            }
+          >
+            {renderNetworkAvatar()}
+          </BadgeWrapper>
+        ) : (
+          renderNetworkAvatar()
+        )}
         <View style={styles.balances}>
           {/*
            * The name of the token must callback to the symbol
@@ -349,7 +366,7 @@ export const TokenListItem = React.memo(
               <StakeButton asset={asset} />
             )}
           </View>
-          {!isTestNet(chainId) ? (
+          {!isTestNet(chainId) && showPercentageChange ? (
             <PercentageChange value={pricePercentChange1d} />
           ) : null}
         </View>

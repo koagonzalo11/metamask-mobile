@@ -18,15 +18,11 @@ import {
   ButtonVariants,
 } from '../../../component-library/components/Buttons/Button';
 import Button from '../../../component-library/components/Buttons/Button/Button';
-import Icon, {
-  IconSize,
-  IconName,
-} from '../../../component-library/components/Icons/Icon';
 import { strings } from '../../../../locales/i18n';
 import { useNavigation } from '@react-navigation/native';
 import Routes from '../../../constants/navigation/Routes';
 import { useStyles } from '../../../component-library/hooks';
-import { useTheme } from '../../../util/theme';
+import { getNftImage } from '../../../util/get-nft-image';
 
 const CollectibleMedia: React.FC<CollectibleMediaProps> = ({
   collectible,
@@ -40,14 +36,12 @@ const CollectibleMedia: React.FC<CollectibleMediaProps> = ({
   onPressColectible,
   isTokenImage,
   isFullRatio,
-  privacyMode = false,
 }) => {
   const [sourceUri, setSourceUri] = useState<string | null>(null);
   const isIpfsGatewayEnabled = useSelector(selectIsIpfsGatewayEnabled);
   const displayNftMedia = useSelector(selectDisplayNftMedia);
   const { navigate } = useNavigation();
 
-  const { colors } = useTheme();
   const { styles } = useStyles(createStyles, {
     backgroundColor: collectible.backgroundColor,
   });
@@ -59,7 +53,7 @@ const CollectibleMedia: React.FC<CollectibleMediaProps> = ({
     if (address) {
       if (small && imagePreview && imagePreview !== '')
         setSourceUri(imagePreview);
-      else setSourceUri((image || imageOriginal) ?? null);
+      else setSourceUri((getNftImage(image) || imageOriginal) ?? null);
     }
   }, [collectible, small, big, setSourceUri]);
 
@@ -168,26 +162,6 @@ const CollectibleMedia: React.FC<CollectibleMediaProps> = ({
   );
 
   const renderMedia = useCallback(() => {
-    if (privacyMode) {
-      return (
-        <View
-          style={[
-            styles.imageHidden,
-            tiny && styles.tinyImage,
-            small && styles.smallImage,
-            big && styles.bigImage,
-            cover && styles.cover,
-            style,
-          ]}
-        >
-          <Icon
-            name={privacyMode ? IconName.EyeSlash : IconName.Eye}
-            size={IconSize.Md}
-            color={colors.text.muted}
-          />
-        </View>
-      );
-    }
     if (
       displayNftMedia ||
       (!displayNftMedia && isIpfsGatewayEnabled && isIPFSUri(sourceUri))
@@ -250,9 +224,6 @@ const CollectibleMedia: React.FC<CollectibleMediaProps> = ({
     styles.tinyImage,
     styles.smallImage,
     styles.bigImage,
-    styles.imageHidden,
-    colors.text.muted,
-    privacyMode,
     cover,
     style,
     tiny,

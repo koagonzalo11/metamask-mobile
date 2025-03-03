@@ -72,18 +72,16 @@ import AccountConnectSingle from './AccountConnectSingle';
 import AccountConnectSingleSelector from './AccountConnectSingleSelector';
 import { PermissionsSummaryProps } from '../../../components/UI/PermissionsSummary/PermissionsSummary.types';
 import PermissionsSummary from '../../../components/UI/PermissionsSummary';
-import {
-  isMultichainVersion1Enabled,
-  getNetworkImageSource,
-} from '../../../util/networks';
+import { getNetworkImageSource } from '../../../util/networks';
 import NetworkConnectMultiSelector from '../NetworkConnect/NetworkConnectMultiSelector';
 import { PermissionKeys } from '../../../core/Permissions/specifications';
 import { CaveatTypes } from '../../../core/Permissions/constants';
 import { useNetworkInfo } from '../../../selectors/selectedNetworkController';
 import { AvatarSize } from '../../../component-library/components/Avatars/Avatar';
-import { selectNetworkConfigurations } from '../../../selectors/networkController';
+import { selectEvmNetworkConfigurationsByChainId } from '../../../selectors/networkController';
 import { isUUID } from '../../../core/SDKConnect/utils/isUUID';
 import useOriginSource from '../../hooks/useOriginSource';
+import { selectIsEvmNetworkSelected } from '../../../selectors/multichainNetworkController';
 
 const createStyles = () =>
   StyleSheet.create({
@@ -105,8 +103,11 @@ const AccountConnect = (props: AccountConnectProps) => {
   const selectedWalletAddress = useSelector(
     selectSelectedInternalAccountFormattedAddress,
   );
+
+  const isEvmSelected = useSelector(selectIsEvmNetworkSelected);
+
   const [selectedAddresses, setSelectedAddresses] = useState<string[]>(
-    selectedWalletAddress ? [selectedWalletAddress] : [],
+    selectedWalletAddress && isEvmSelected ? [selectedWalletAddress] : [],
   );
   const [confirmedAddresses, setConfirmedAddresses] =
     useState<string[]>(selectedAddresses);
@@ -115,7 +116,7 @@ const AccountConnect = (props: AccountConnectProps) => {
   const [screen, setScreen] = useState<AccountConnectScreens>(
     AccountConnectScreens.SingleConnect,
   );
-  const { accounts, ensByAccountAddress } = useAccounts({
+  const { evmAccounts: accounts, ensByAccountAddress } = useAccounts({
     isLoading,
   });
   const previousIdentitiesListSize = useRef<number>();
@@ -138,7 +139,9 @@ const AccountConnect = (props: AccountConnectProps) => {
   const accountsLength = useSelector(selectAccountsLength);
   const { wc2Metadata } = useSelector((state: RootState) => state.sdk);
 
-  const networkConfigurations = useSelector(selectNetworkConfigurations);
+  const networkConfigurations = useSelector(
+    selectEvmNetworkConfigurationsByChainId,
+  );
 
   const { origin: channelIdOrHostname } = hostInfo.metadata as {
     id: string;
@@ -735,9 +738,7 @@ const AccountConnect = (props: AccountConnectProps) => {
         hostname={hostname}
         onPrimaryActionButtonPress={() => {
           setConfirmedAddresses(selectedAddresses);
-          return isMultichainVersion1Enabled
-            ? setScreen(AccountConnectScreens.SingleConnect)
-            : undefined;
+          setScreen(AccountConnectScreens.SingleConnect);
         }}
         screenTitle={strings('accounts.edit_accounts_title')}
       />
@@ -821,9 +822,7 @@ const AccountConnect = (props: AccountConnectProps) => {
       case AccountConnectScreens.SingleConnect:
         return isSdkUrlUnknown
           ? renderSingleConnectScreen()
-          : isMultichainVersion1Enabled
-          ? renderPermissionsSummaryScreen()
-          : renderSingleConnectScreen();
+          : renderPermissionsSummaryScreen();
       case AccountConnectScreens.SingleConnectSelector:
         return renderSingleConnectSelectorScreen();
       case AccountConnectScreens.MultiConnectSelector:
