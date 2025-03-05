@@ -59,6 +59,7 @@ export function setEventStageError(
   rpcName: string,
   e: Error | unknown,
 ): iEventAction {
+  console.log('======================= into setEventStageError===========');
   return {
     type: ActionType.SET_EVENT_ERROR,
     rpcName,
