@@ -25,6 +25,7 @@ const LedgerSignModal = () => {
   const { onConfirm, onReject } = useConfirmActions();
 
   const completeRequest = useCallback(() => {
+    console.log('======================= INTO completeRequest =================');
     closeLedgerSignModal();
     dispatch(resetEventStage(signingEvent.rpcName));
   }, [closeLedgerSignModal, dispatch, signingEvent.rpcName]);
@@ -35,9 +36,10 @@ const LedgerSignModal = () => {
       signingEvent.eventStage === RPCStageTypes.COMPLETE ||
       signingEvent.eventStage === RPCStageTypes.ERROR
     ) {
+      console.log('======================= RECEIVED EVENT =================', signingEvent);
       completeRequest();
     }
-  }, [signingEvent.eventStage, completeRequest]);
+  }, [signingEvent, signingEvent.eventStage, completeRequest]);
 
   const onConfirmation = useCallback(async () => {
     onConfirm();

@@ -55,6 +55,7 @@ const LedgerMessageSignModal = () => {
     useParams<LedgerMessageSignModalParams>();
 
   const dismissModal = useCallback(() => {
+    // eslint-disable-next-line
     console.log('======================= INTO dismissModal =================');
     modalRef?.current?.dismissModal();
     dispatch(resetEventStage(signingEvent.rpcName));
