@@ -55,6 +55,7 @@ const LedgerMessageSignModal = () => {
     useParams<LedgerMessageSignModalParams>();
 
   const dismissModal = useCallback(() => {
+    console.log('======================= INTO dismissModal =================');
     modalRef?.current?.dismissModal();
     dispatch(resetEventStage(signingEvent.rpcName));
   }, [dispatch, signingEvent.rpcName]);
@@ -72,9 +73,10 @@ const LedgerMessageSignModal = () => {
       signingEvent.eventStage === RPCStageTypes.COMPLETE ||
       signingEvent.eventStage === RPCStageTypes.ERROR
     ) {
+      console.log('======================= RECEIVED EVENT =================', signingEvent);
       dismissModal();
     }
-  }, [signingEvent.eventStage, dismissModal]);
+  }, [signingEvent, signingEvent.eventStage, dismissModal]);
 
   const executeOnLedger = useCallback(async () => {
     onConfirmationComplete(true);
