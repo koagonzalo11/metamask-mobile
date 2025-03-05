@@ -941,7 +941,7 @@ export const getRpcMethodMiddleware = ({
       });
       isWhiteListedMethod &&
         store.dispatch(setEventStageError(req.method, error));
-      throw error;
+      // throw error;
     }
   });
 };
