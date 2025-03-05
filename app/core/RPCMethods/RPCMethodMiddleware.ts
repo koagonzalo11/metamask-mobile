@@ -943,7 +943,7 @@ export const getRpcMethodMiddleware = ({
         store.dispatch(setEventStageError(req.method, error));
       // eslint-disable-next-line
       console.log('===================================', isWhiteListedMethod, req.method, error);
-      // throw error;
+      throw error;
     }
   });
 };

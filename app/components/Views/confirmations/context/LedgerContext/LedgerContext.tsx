@@ -18,6 +18,7 @@ import LedgerSignModal from '../../components/Confirm/LedgerSignModal';
 import { RootState } from '../../../../../reducers';
 import { useSelector } from 'react-redux';
 import { iEventGroup, RPCStageTypes } from '../../../../../reducers/rpcEvents';
+import { useNavigation } from '@react-navigation/native';
 
 export interface LedgerContextType {
   deviceId?: string;
@@ -38,6 +39,7 @@ export const LedgerContext = createContext<LedgerContextType>({
 export const LedgerContextProvider: React.FC<{
   children: ReactElement[] | ReactElement;
 }> = ({ children }) => {
+  const navigation = useNavigation();
   const { approvalRequest } = useApprovalRequest();
   const fromAddress = approvalRequest?.requestData?.from as string;
   const isLedgerAccount =
@@ -49,6 +51,14 @@ export const LedgerContextProvider: React.FC<{
   const { signingEvent }: iEventGroup = useSelector(
     (state: RootState) => state.rpcEvents,
   );
+
+  useEffect(() => {
+    navigation.addListener('beforeRemove', () => setLedgerSignModalOpen(false));
+    return () =>
+      navigation.removeListener('beforeRemove', () =>
+        setLedgerSignModalOpen(false),
+      );
+  }, [setLedgerSignModalOpen, navigation]);
 
   useEffect(() => {
     console.log(
