@@ -25,22 +25,19 @@ const LedgerSignModal = () => {
   const { onConfirm, onReject } = useConfirmActions();
 
   const completeRequest = useCallback(() => {
-    console.log('======================= INTO completeRequest =================');
     closeLedgerSignModal();
     dispatch(resetEventStage(signingEvent.rpcName));
   }, [closeLedgerSignModal, dispatch, signingEvent.rpcName]);
 
   useEffect(() => {
-    console.log('======================= RECEIVED EVENT =================', signingEvent);
     //Close the modal when the signMessageStage is complete or error, error will return the error message to the user
     if (
       signingEvent.eventStage === RPCStageTypes.COMPLETE ||
       signingEvent.eventStage === RPCStageTypes.ERROR
     ) {
-      console.log('======================= RECEIVED EVENT =================', signingEvent);
       completeRequest();
     }
-  }, [signingEvent, signingEvent.eventStage, completeRequest]);
+  }, [signingEvent.eventStage, completeRequest]);
 
   const onConfirmation = useCallback(async () => {
     onConfirm();

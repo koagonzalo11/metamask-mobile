@@ -72,7 +72,6 @@ const LedgerMessageSignModal = () => {
       signingEvent.eventStage === RPCStageTypes.COMPLETE ||
       signingEvent.eventStage === RPCStageTypes.ERROR
     ) {
-      console.log('======================= RECEIVED EVENT =================', signingEvent);
       dismissModal();
     }
   }, [signingEvent.eventStage, dismissModal]);

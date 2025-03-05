@@ -112,7 +112,6 @@ const signMessageReducer = (
         },
       };
     case ActionType.SET_EVENT_ERROR:
-      console.log('================================ action', action);
       return {
         ...state,
         [eventGroup]: {

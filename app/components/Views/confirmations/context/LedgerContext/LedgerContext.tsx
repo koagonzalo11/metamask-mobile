@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 import ExtendedKeyringTypes from '../../../../../constants/keyringTypes';
 import { getDeviceId } from '../../../../../core/Ledger/Ledger';
@@ -15,10 +16,6 @@ import {
 } from '../../../../../util/address';
 import useApprovalRequest from '../../hooks/useApprovalRequest';
 import LedgerSignModal from '../../components/Confirm/LedgerSignModal';
-import { RootState } from '../../../../../reducers';
-import { useSelector } from 'react-redux';
-import { iEventGroup, RPCStageTypes } from '../../../../../reducers/rpcEvents';
-import { useNavigation } from '@react-navigation/native';
 
 export interface LedgerContextType {
   deviceId?: string;
@@ -48,9 +45,6 @@ export const LedgerContextProvider: React.FC<{
     useState(isLedgerAccount);
   const [ledgerSignModalOpen, setLedgerSignModalOpen] = useState(false);
   const [deviceId, setDeviceId] = useState<string>();
-  const { signingEvent }: iEventGroup = useSelector(
-    (state: RootState) => state.rpcEvents,
-  );
 
   useEffect(() => {
     navigation.addListener('beforeRemove', () => setLedgerSignModalOpen(false));
@@ -59,24 +53,6 @@ export const LedgerContextProvider: React.FC<{
         setLedgerSignModalOpen(false),
       );
   }, [setLedgerSignModalOpen, navigation]);
-
-  useEffect(() => {
-    console.log(
-      '======================= RECEIVED EVENT =================',
-      signingEvent,
-    );
-    //Close the modal when the signMessageStage is complete or error, error will return the error message to the user
-    if (
-      signingEvent.eventStage === RPCStageTypes.COMPLETE ||
-      signingEvent.eventStage === RPCStageTypes.ERROR
-    ) {
-      console.log(
-        '======================= RECEIVED EVENT =================',
-        signingEvent,
-      );
-      setLedgerSignModalOpen(false);
-    }
-  }, [signingEvent, signingEvent.eventStage, setLedgerSignModalOpen]);
 
   const openLedgerSignModal = useCallback(() => {
     setLedgerSigningInProgress(false);
