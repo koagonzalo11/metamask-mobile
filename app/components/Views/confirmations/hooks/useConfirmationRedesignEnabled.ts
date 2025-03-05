@@ -28,12 +28,11 @@ function isRedesignedSignature({
   approvalRequestType: ApprovalType;
   confirmationRedesignFlags: ConfirmationRedesignRemoteFlags;
 }) {
-  // return (
-  //   confirmationRedesignFlags?.signatures &&
-  //   approvalRequestType &&
-  //   REDESIGNED_SIGNATURE_TYPES.includes(approvalRequestType as ApprovalType)
-  // );
-  return false;
+  return (
+    confirmationRedesignFlags?.signatures &&
+    approvalRequestType &&
+    REDESIGNED_SIGNATURE_TYPES.includes(approvalRequestType as ApprovalType)
+  );
 }
 
 function isRedesignedTransaction({

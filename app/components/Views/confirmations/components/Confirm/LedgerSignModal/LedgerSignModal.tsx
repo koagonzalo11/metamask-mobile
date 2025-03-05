@@ -47,8 +47,8 @@ const LedgerSignModal = () => {
   }, [onConfirm]);
 
   const onRejection = useCallback(() => {
-    onReject();
-    completeRequest();
+    // onReject();
+    // completeRequest();
   }, [completeRequest, onReject]);
 
   if (!deviceId) {
