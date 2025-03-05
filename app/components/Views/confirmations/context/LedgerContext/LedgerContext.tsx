@@ -47,7 +47,10 @@ export const LedgerContextProvider: React.FC<{
   const [deviceId, setDeviceId] = useState<string>();
 
   useEffect(() => {
-    navigation.addListener('beforeRemove', () => setLedgerSignModalOpen(false));
+    navigation.addListener('beforeRemove', (e: any) => {
+      console.log('===============', e);
+      setLedgerSignModalOpen(false);
+    });
     return () =>
       navigation.removeListener('beforeRemove', () =>
         setLedgerSignModalOpen(false),
