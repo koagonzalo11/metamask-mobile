@@ -31,6 +31,7 @@ const LedgerSignModal = () => {
   }, [closeLedgerSignModal, dispatch, signingEvent.rpcName]);
 
   useEffect(() => {
+    console.log('======================= RECEIVED EVENT =================', signingEvent);
     //Close the modal when the signMessageStage is complete or error, error will return the error message to the user
     if (
       signingEvent.eventStage === RPCStageTypes.COMPLETE ||
