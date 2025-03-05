@@ -137,6 +137,7 @@ const LedgerConfirmationModal = ({
   }, [completeClose, delayClose, isSendingLedgerCommands]);
 
   useEffect(() => {
+    console.log('==================== handling ledger error=========', ledgerError);
     if (ledgerError) {
       switch (ledgerError) {
         case LedgerCommunicationErrors.FailedToOpenApp:
