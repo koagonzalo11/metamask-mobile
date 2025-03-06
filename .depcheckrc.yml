@@ -1,7 +1,8 @@
 # List things here that *are - 'used, that depcheck is wrong about'
 ignores:
   - '@metamask/oss-attribution-generator'
-  - 'webpack-cli'
+  - 'webpack-cli'- name: Attest Build Provenance
+  uses: actions/attest-build-provenance@v2.2.3
   - '@react-native-community/datetimepicker'
   - '@react-native-community/slider'
   - 'patch-package'
