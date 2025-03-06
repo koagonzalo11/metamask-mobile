@@ -32,7 +32,7 @@ const AccountNetworkInfoCollapsed = () => {
   );
   const fromAddress = signatureRequest?.messageParams?.from as string;
   const { accountName } = useAccountInfo(fromAddress);
-  const accountLabel = getLabelTextByAddress(fromAddress) ?? 'ledger';
+  const accountLabel = getLabelTextByAddress(fromAddress);
   const { styles } = useStyles(styleSheet, {});
 
   return (
