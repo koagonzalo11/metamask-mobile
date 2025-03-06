@@ -15,10 +15,18 @@ const styleSheet = (params: { theme: Theme }) => {
       marginRight: 16,
       alignSelf: 'center',
     },
+    accountInfo: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     accountName: {
       color: theme.colors.text.default,
       ...fontStyles.bold,
       fontSize: 14,
+    },
+    accountLabelWrapper: {
+      marginStart: 8,
     },
     networkName: {
       color: theme.colors.text.default,
