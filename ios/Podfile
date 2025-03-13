@@ -159,7 +159,7 @@ post_install do |installer|
     "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics",
     "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-maccatalyst/FirebaseAnalytics.framework/FirebaseAnalytics",
     "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/Flipper-Glog/Frameworks/glog.xcframework/ios-arm64_armv7/glog.framework/glog"
+    "./ios/Pods/Flipper-Glog/Frameworks/glog.xcframework/ios-arm64_armv7/glog.framework/glog",
     "./ios/branch-ios-sdk/Branch.framework/Branch"
   ]
 
