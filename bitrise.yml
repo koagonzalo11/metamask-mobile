@@ -1515,7 +1515,7 @@ workflows:
           inputs:
             - content: |-
                 #!/usr/bin/env bash
-                xcrun bitcode_strip -r MetaMask.app/Frameworks/OpenSSL.framework/OpenSSL -o MetaMask.app/Frameworks/OpenSSL.framework/OpenSSL
+                xcrun bitcode_strip -r OpenSSL.framework/OpenSSL -o OpenSSL.framework/OpenSSL
                 METAMASK_BUILD_TYPE='main' METAMASK_ENVIRONMENT='production' yarn build:ios:pre-release
           title: iOS Sourcemaps & Build
           is_always_run: false
