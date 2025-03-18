@@ -1,5 +1,5 @@
 // Third party dependencies.
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Alert, ListRenderItem, View, ViewStyle } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
@@ -37,6 +37,7 @@ import { AccountSelectorListProps } from './AccountSelectorList.types';
 import styleSheet from './AccountSelectorList.styles';
 import { AccountListBottomSheetSelectorsIDs } from '../../../../e2e/selectors/wallet/AccountListBottomSheet.selectors';
 import { WalletViewSelectorsIDs } from '../../../../e2e/selectors/wallet/WalletView.selectors';
+import Logger from '../../../util/Logger';
 
 const AccountSelectorList = ({
   onSelectAccount,
@@ -53,6 +54,28 @@ const AccountSelectorList = ({
   privacyMode = false,
   ...props
 }: AccountSelectorListProps) => {
+  const renderRef = useRef({
+    count: 0,
+    prevProps: {
+      accounts: null as any,
+      ensByAccountAddress: null as any,
+      isLoading: null as any,
+      selectedAddresses: null as any,
+      privacyMode: null as any,
+      isMultiSelect: null as any,
+      isSelectionDisabled: null as any,
+      isRemoveAccountEnabled: null as any,
+      isAutoScrollEnabled: null as any,
+      onSelectAccount: null as any,
+      onRemoveImportedAccount: null as any,
+      renderRightAccessory: null as any,
+    },
+    prevDeps: {
+      internalAccounts: null as any,
+      accountAvatarType: null as any,
+    },
+  });
+
   const { navigate } = useNavigation();
   // TODO: Replace "any" with type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -293,6 +316,148 @@ const AccountSelectorList = ({
       accountsLengthRef.current = accounts.length;
     }
   }, [accounts, selectedAddresses, isAutoScrollEnabled]);
+
+  useEffect(() => {
+    const changes: Record<string, any> = {};
+
+    // Check prop changes
+    if (renderRef.current.prevProps.accounts !== accounts) {
+      changes.accounts = {
+        prevLength: renderRef.current.prevProps.accounts?.length,
+        newLength: accounts?.length,
+        areEqual: renderRef.current.prevProps.accounts === accounts,
+      };
+    }
+
+    if (
+      renderRef.current.prevProps.ensByAccountAddress !== ensByAccountAddress
+    ) {
+      changes.ensByAccountAddress = {
+        prevKeys: Object.keys(
+          renderRef.current.prevProps.ensByAccountAddress || {},
+        ).length,
+        newKeys: Object.keys(ensByAccountAddress || {}).length,
+      };
+    }
+
+    if (renderRef.current.prevProps.isLoading !== isLoading) {
+      changes.isLoading = {
+        from: renderRef.current.prevProps.isLoading,
+        to: isLoading,
+      };
+    }
+
+    if (renderRef.current.prevProps.selectedAddresses !== selectedAddresses) {
+      changes.selectedAddresses = {
+        prevAddresses: renderRef.current.prevProps.selectedAddresses,
+        newAddresses: selectedAddresses,
+      };
+    }
+
+    if (renderRef.current.prevProps.privacyMode !== privacyMode) {
+      changes.privacyMode = {
+        from: renderRef.current.prevProps.privacyMode,
+        to: privacyMode,
+      };
+    }
+
+    if (renderRef.current.prevProps.isMultiSelect !== isMultiSelect) {
+      changes.isMultiSelect = {
+        from: renderRef.current.prevProps.isMultiSelect,
+        to: isMultiSelect,
+      };
+    }
+
+    if (
+      renderRef.current.prevProps.isSelectionDisabled !== isSelectionDisabled
+    ) {
+      changes.isSelectionDisabled = {
+        from: renderRef.current.prevProps.isSelectionDisabled,
+        to: isSelectionDisabled,
+      };
+    }
+
+    if (
+      renderRef.current.prevProps.isRemoveAccountEnabled !==
+      isRemoveAccountEnabled
+    ) {
+      changes.isRemoveAccountEnabled = {
+        from: renderRef.current.prevProps.isRemoveAccountEnabled,
+        to: isRemoveAccountEnabled,
+      };
+    }
+
+    if (
+      renderRef.current.prevProps.isAutoScrollEnabled !== isAutoScrollEnabled
+    ) {
+      changes.isAutoScrollEnabled = {
+        from: renderRef.current.prevProps.isAutoScrollEnabled,
+        to: isAutoScrollEnabled,
+      };
+    }
+
+    if (renderRef.current.prevProps.onSelectAccount !== onSelectAccount) {
+      changes.onSelectAccount = 'Function Reference Changed';
+    }
+
+    if (
+      renderRef.current.prevProps.onRemoveImportedAccount !==
+      onRemoveImportedAccount
+    ) {
+      changes.onRemoveImportedAccount = 'Function Reference Changed';
+    }
+
+    if (
+      renderRef.current.prevProps.renderRightAccessory !== renderRightAccessory
+    ) {
+      changes.renderRightAccessory = 'Function Reference Changed';
+    }
+
+    // Check dependency changes
+    if (renderRef.current.prevDeps.internalAccounts !== internalAccounts) {
+      changes.internalAccounts = {
+        prevLength: renderRef.current.prevDeps.internalAccounts?.length,
+        newLength: internalAccounts?.length,
+        areEqual:
+          renderRef.current.prevDeps.internalAccounts === internalAccounts,
+      };
+    }
+
+    if (renderRef.current.prevDeps.accountAvatarType !== accountAvatarType) {
+      changes.accountAvatarType = {
+        from: renderRef.current.prevDeps.accountAvatarType,
+        to: accountAvatarType,
+      };
+    }
+
+    renderRef.current.count++;
+
+    Logger.log('AccountSelectorList Re-render', {
+      renderCount: renderRef.current.count,
+      changes,
+    });
+
+    // Update refs
+    renderRef.current.prevProps = {
+      accounts,
+      ensByAccountAddress,
+      isLoading,
+      selectedAddresses,
+      privacyMode,
+      isMultiSelect,
+      isSelectionDisabled,
+      isRemoveAccountEnabled,
+      isAutoScrollEnabled,
+      onSelectAccount,
+      onRemoveImportedAccount,
+      renderRightAccessory,
+    };
+
+    renderRef.current.prevDeps = {
+      internalAccounts,
+      accountAvatarType,
+    };
+  });
 
   return (
     <FlatList

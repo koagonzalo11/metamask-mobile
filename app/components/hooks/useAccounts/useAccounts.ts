@@ -40,6 +40,7 @@ import {
   isNonEvmAddress,
 } from '../../../core/Multichain/utils';
 import { getAccountBalances } from './utils';
+import Logger from '../../../util/Logger';
 
 /**
  * Hook that returns both wallet accounts and ens name information.
@@ -98,6 +99,7 @@ const useAccounts = ({
       flattenedAccounts: Account[];
       startingIndex: number;
     }) => {
+      Logger.log('FETCH ENS NAMES', { flattenedAccounts, startingIndex });
       // Ensure index exists in account list.
       let safeStartingIndex = startingIndex;
       let mirrorIndex = safeStartingIndex - 1;
@@ -109,7 +111,12 @@ const useAccounts = ({
         safeStartingIndex = flattenedAccounts.length - 1;
       }
 
-      const fetchENSName = async (accountIndex: number) => {
+      /**
+       * Fetch the ENS name for the account at the given index.
+       * @param accountIndex
+       * @returns True if an ENS name was fetched, false otherwise.
+       */
+      const fetchENSName = async (accountIndex: number): Promise<boolean> => {
         const { address } = flattenedAccounts[accountIndex];
         try {
           const ens: string | undefined = await doENSReverseLookup(
@@ -121,24 +128,29 @@ const useAccounts = ({
               ...latestENSbyAccountAddress,
               [address]: ens,
             };
+            return true;
           }
         } catch (e) {
           // ENS either doesn't exist or failed to fetch.
         }
+        return false;
       };
 
       // Iterate outwards in both directions starting at the starting index.
       while (mirrorIndex >= 0 || safeStartingIndex < flattenedAccounts.length) {
         if (!isMountedRef.current) return;
+        let hasUpdatedAccounts = false;
         if (safeStartingIndex < flattenedAccounts.length) {
-          await fetchENSName(safeStartingIndex);
+          hasUpdatedAccounts ||= await fetchENSName(safeStartingIndex);
         }
         if (mirrorIndex >= 0) {
-          await fetchENSName(mirrorIndex);
+          hasUpdatedAccounts ||= await fetchENSName(mirrorIndex);
         }
         mirrorIndex--;
         safeStartingIndex++;
-        setENSByAccountAddress(latestENSbyAccountAddress);
+        if (hasUpdatedAccounts) {
+          setENSByAccountAddress(latestENSbyAccountAddress);
+        }
       }
     },
     [chainId],
@@ -235,6 +247,11 @@ const useAccounts = ({
     };
   }, [getAccounts, isLoading]);
 
+  Logger.log('USE ACCOUNTS HOOK', {
+    accounts: accounts.length,
+    evmAccounts: evmAccounts.length,
+    ensByAccountAddress: Object.keys(ensByAccountAddress).length,
+  });
   return {
     accounts,
     evmAccounts,

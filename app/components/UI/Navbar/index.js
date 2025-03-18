@@ -65,6 +65,7 @@ import { getFormattedAddressFromInternalAccount } from '../../../core/Multichain
 
 ///: END:ONLY_INCLUDE_IF
 import { withMetaMetrics } from '../Stake/utils/metaMetrics/withMetaMetrics';
+import Logger from '../../../util/Logger';
 
 const trackEvent = (event, params = {}) => {
   MetaMetrics.getInstance().trackEvent(event);
@@ -1027,6 +1028,7 @@ export function getWalletNavbarOptions(
           accountName={accountName}
           accountAvatarType={accountAvatarType}
           onPress={() => {
+            Logger.log('OPEN ACCOUNT SELECTOR FROM NAVBAR');
             navigation.navigate(...createAccountSelectorNavDetails({}));
           }}
           accountTypeLabel={
