@@ -150,17 +150,17 @@ post_install do |installer|
   end
   
   framework_paths = [
-    "./ios/Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework/ios-arm64_i386_x86_64-simulator/OpenSSL.framework/OpenSSL",
-    "./ios/Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework/ios-arm64_armv7/OpenSSL.framework/OpenSSL",
-    "./ios/Pods/Flipper-DoubleConversion/Frameworks/double-conversion.xcframework/ios-arm64_armv7/double-conversion.framework/double-conversion",
-    "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/macos-arm64_x86_64/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-maccatalyst/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64/FirebaseAnalytics.framework/FirebaseAnalytics",
-    "./ios/Pods/Flipper-Glog/Frameworks/glog.xcframework/ios-arm64_armv7/glog.framework/glog",
-    "./ios/branch-ios-sdk/Branch.framework/Branch"
+    "Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework/ios-arm64_i386_x86_64-simulator/OpenSSL.framework/OpenSSL",
+    "Pods/OpenSSL-Universal/Frameworks/OpenSSL.xcframework/ios-arm64_armv7/OpenSSL.framework/OpenSSL",
+    "Pods/Flipper-DoubleConversion/Frameworks/double-conversion.xcframework/ios-arm64_armv7/double-conversion.framework/double-conversion",
+    "Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64/FirebaseAnalytics.framework/FirebaseAnalytics",
+    "Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics",
+    "Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/macos-arm64_x86_64/FirebaseAnalytics.framework/FirebaseAnalytics",
+    "Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics",
+    "Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-maccatalyst/FirebaseAnalytics.framework/FirebaseAnalytics",
+    "Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64/FirebaseAnalytics.framework/FirebaseAnalytics",
+    "Pods/Flipper-Glog/Frameworks/glog.xcframework/ios-arm64_armv7/glog.framework/glog",
+    "branch-ios-sdk/Branch.framework/Branch"
   ]
 
   framework_paths.each do |framework_relative_path|
