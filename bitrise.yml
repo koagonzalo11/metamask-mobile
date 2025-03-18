@@ -272,7 +272,6 @@ workflows:
       - setup
       - prep_environment
     steps:
-      - restore-cocoapods-cache@2: {}
       - script@1:
           inputs:
             - content: |-
@@ -940,7 +939,6 @@ workflows:
                 # INTERMEDIATE_IOS_BUILD_DIR & INTERMEDIATE_IOS_DETOX_DIR are the cached directories by ios_e2e_build's "Save iOS build" step
                 cp -r "$INTERMEDIATE_IOS_BUILD_DIR" "$BITRISE_SOURCE_DIR/ios/build"
                 cp -r "$INTERMEDIATE_IOS_DETOX_DIR" "$BITRISE_SOURCE_DIR/../Library/Detox"
-      - restore-cocoapods-cache@2: {}
       - restore-cache@2:
           title: Restore cache node_modules
           inputs:
@@ -1044,7 +1042,6 @@ workflows:
                 export METAMASK_ENVIRONMENT='local'
                 export METAMASK_BUILD_TYPE='main'
                 IGNORE_BOXLOGS_DEVELOPMENT="true" yarn test:e2e:ios:build:qa-release
-      - save-cocoapods-cache@1: {}
       - save-cache@1:
           title: Save CCache
           run_if: '{{not (enveq "SKIP_CCACHE_UPLOAD" "true")}}'
@@ -1092,7 +1089,6 @@ workflows:
                 # INTERMEDIATE_IOS_BUILD_DIR & INTERMEDIATE_IOS_DETOX_DIR are the cached directories by ios_e2e_build's "Save iOS build" step
                 cp -r "$INTERMEDIATE_IOS_BUILD_DIR" "$BITRISE_SOURCE_DIR/ios/build"
                 cp -r "$INTERMEDIATE_IOS_DETOX_DIR" "$BITRISE_SOURCE_DIR/../Library/Detox"
-      - restore-cocoapods-cache@2: {}
       - restore-cache@2:
           title: Restore cache node_modules
           inputs:
